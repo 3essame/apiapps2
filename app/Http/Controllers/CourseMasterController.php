@@ -35,7 +35,7 @@ class CourseMasterController extends Controller
 {
     return $coursemaster;
 }
-
+// update
     public function update(CourseMaster $coursemaster)
     {
         $coursemaster->update([
