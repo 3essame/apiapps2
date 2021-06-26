@@ -29,3 +29,7 @@ Route::get('update-user', function () {
     return $user->load('department');
 
 });
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
