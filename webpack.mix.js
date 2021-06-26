@@ -1,5 +1,6 @@
 const mix = require('laravel-mix');
-
+const VuetifyLoaderPlugin = require("vuetify-loader/lib/plugin");
+const webpack = require("webpack");
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -14,3 +15,28 @@ const mix = require('laravel-mix');
 mix.js('resources/js/app.js', 'public/js')
     .vue()
     .sass('resources/sass/app.scss', 'public/css');
+mix.webpackConfig({
+    // module: {
+    //     rules: [{
+    //         test: /\.js?$/,
+    //         use: [{
+    //             loader: "babel-loader",
+    //             options: mix.config.babel(),
+    //         }, ],
+    //         // enforce: 'pre',
+    //         // exclude: /node_modules/,
+    //         // loader: 'eslint-loader',
+    //         // test: /\.(js|vue)?$/
+    //     }, ],
+    // },
+    output: {
+        chunkFilename: mix.inProduction()
+            ? "js/chunks/[name].js?id=[chunkhash]"
+            : "js/chunks/[name].js"
+    },
+    plugins: [
+        new VuetifyLoaderPlugin(),
+      
+    ]
+});
+

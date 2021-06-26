@@ -1,32 +1,79 @@
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
+import Vue from "vue";
+import vuetify from "./plugins/vuetify";
 
-require('./bootstrap');
+import axios from "axios";
+import VueAxios from "vue-axios";
+import router from "./plugins/router";
+import store from "./store";
 
-window.Vue = require('vue').default;
+//components
+import Index from "./Index.vue"; //root
+import DBlock from "./components/DBlock";
+import DDialog from "./components/DDialog";
 
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
+import auth from "@websanova/vue-auth/dist/v2/vue-auth.esm.js";
+import driverAuthBearer from "@websanova/vue-auth/dist/drivers/auth/bearer.esm.js";
+import driverHttpAxios from "@websanova/vue-auth/dist/drivers/http/axios.1.x.esm.js";
+import driverRouterVueRouter from "@websanova/vue-auth/dist/drivers/router/vue-router.2.x.esm.js";
+import dayjs from 'dayjs'
 
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+Object.defineProperties(Vue.prototype, {
+    $date: {
+        get() {
+            return dayjs
+        }
+    }
+});
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+window.jsonToFormData = require("./plugins/jsonToFormData.min.js");
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+Vue.router = router;
+Vue.config.performance = false;
 
-const app = new Vue({
-    el: '#app',
+Vue.use(VueAxios, axios);
+
+axios.defaults.baseURL =
+    window.location.protocol +
+    "//" +
+    window.location.hostname +
+    ":" +
+    window.location.port +
+    "/api";
+//axios.defaults.withCredentials = true;
+let token = document.head.querySelector('meta[name="csrf-token"]');
+
+if (token) {
+    axios.defaults.headers.common["X-CSRF-TOKEN"] = token.content;
+    //axios.defaults.headers.common["Authorization"] = token.content;
+}
+window.axios = axios;
+
+Vue.use(auth, {
+    plugins: {
+        http: Vue.axios, // Axios
+        // http: Vue.http, // Vue Resource
+        router: Vue.router
+    },
+    drivers: {
+        auth: driverAuthBearer,
+        http: driverHttpAxios,
+        router: driverRouterVueRouter
+    },
+    options: {
+        rolesKey: "permissions",
+        notFoundRedirect: { path: "/" },
+        refreshData: { enabled: false }
+    }
+});
+Vue.component("index", Index);
+Vue.component("dBlock", DBlock);
+Vue.component("dDialog", DDialog);
+
+Vue.config.productionTip = false;
+
+export default new Vue({
+    el: "#app",
+    vuetify,
+    router,
+    store
 });
