@@ -20,6 +20,21 @@ php artisan route:clear
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+//auth routes
+Route::prefix('auth')->group(function () {
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('login', [AuthController::class, 'login']);
+    Route::get('refresh', [AuthController::class, 'refresh']);
+    Route::post('send-reset-code', [AuthController::class, 'sendResetCode']);
+    Route::post('reset-password', [AuthController::class, 'resetPassword']);
+    Route::group(['middleware' => 'auth:api'], function () {
+        Route::get('user', [AuthController::class, 'user']);
+        Route::post('logout', [AuthController::class, 'logout']);
+    });
+});
+
+
 Route::apiResource('job', JobController::class);
 Route::apiResource('user', UserController::class);
 Route::apiResource('course', CourseController::class);
@@ -28,3 +43,8 @@ Route::apiResource('cormaster', CourseMasterController::class);
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::group(['middleware' => 'auth:api'], function () {
+
+    
+}

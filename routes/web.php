@@ -14,22 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('create-user', function () {
-    return User::create(['name'=>'essam','department_id'=>1,'cevile_id'=>2]);
-
-});
-
-Route::get('update-user', function () {
-    $user=User::find(1);
-    $user->update(['name'=>'updated_essam']);
-    return $user->load('department');
-
-});
-
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//redirect to vue routes
+Route::get('/{any?}', function () {
+    $settings =  DB::table('settings')->get();
+    foreach ($settings as $s) {
+        $s->value = json_decode($s->value);
+    }
+    return view('welcome', ['settings' => $settings]);
+})->where('any', '^(?!api\/)[\/\w\.-]*');
