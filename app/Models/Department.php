@@ -10,9 +10,10 @@ class Department extends Model
     use HasFactory;
     protected $guarded = [];
 
+    public $timestamps = false;
+
     public function coursemaster_department() // relation with CourseMaster many to many
     {
-        return $this->belongsToMany('App\Models\CourseMaster','coursemaster_departments')->withPivot(['state']);
+        return $this->belongsToMany('App\Models\CourseMaster', 'coursemaster_departments')->withPivot(['state']);
     }
-
 }

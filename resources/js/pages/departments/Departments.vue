@@ -1,38 +1,47 @@
 <template>
-	<div>
-		<div class="d-flex align-center">
-			<v-btn class="mx-2" v-if="$auth.check()" fab dark color="info" @click="addDepartment()">
-				<v-icon size="50" color="white">mdi-plus</v-icon>
-			</v-btn>
-			<h2 class="ph" style="flex:1">
-				الاقسام الرئيسية
-			</h2>
-			<v-btn class="mx-2" fab dark color="info" to="/">
-				<v-icon size="40" color="white" @click="addDepartment()">mdi-home</v-icon>
-			</v-btn>
+	<v-card>
+		<v-card-title class="pa-2 primary white--text">
+			{{$route.name}}
+			<v-spacer></v-spacer>
+			<v-btn class="white" @click="addDepartment()"> اضافة قسم</v-btn>
+		</v-card-title>
+		<v-card-text>
+			<v-list subheader>
+				<v-subheader>الاقسام</v-subheader>
 
-		</div>
+				<template v-for="(department,index) in departments">
 
-		<v-card outlined v-for="department in departments" :key="department.id" rounded class="ma-2" @click="$router.push('/departments/'+ department.id )">
-			<v-card-title class="justify-center">
-				{{department.order + '  ' + department.name}}
-			</v-card-title>
+					<v-list-item :key="department.id">
+						<v-list-item-avatar color="primary white--text">
+							<span class="title">{{index +1 }}</span>
+							<!-- <v-img :alt="`${chat.title} avatar`" :src="chat.avatar"></v-img> -->
+						</v-list-item-avatar>
 
-			<v-card-actions v-if="$auth.check()">
-				<v-spacer></v-spacer>
-				<v-chip class="mx-2" @click.stop="editDepartment(department)">تعديل</v-chip>
-				<v-chip color="error" @click.stop="deleteDepartment(department.id)">حذف</v-chip>
-			</v-card-actions>
-		</v-card>
+						<v-list-item-content>
+							<v-list-item-title v-text="department.name"></v-list-item-title>
+							<v-list-item-subtitle v-text="department.root"></v-list-item-subtitle>
+
+						</v-list-item-content>
+
+						<v-chip class="mx-2" small label @click.stop="editDepartment(department)">تعديل</v-chip>
+						<v-chip color="error" small label @click.stop="deleteDepartment(department.id)">حذف</v-chip>
+
+					</v-list-item>
+
+					<v-divider></v-divider>
+				</template>
+			</v-list>
+
+		</v-card-text>
 
 		<d-dialog v-model="show_add_item" width="500px" title=" اضافة قسم" @save="saveDepartment">
+			<v-text-field outlined dense v-model="department.root" label="الهيئة" :rules="[ v => !!v || 'field is required']" required />
 			<v-text-field outlined dense v-model="department.name" label="القسم" :rules="[ v => !!v || 'Name is required']" required />
 			<v-text-field outlined type="number" dense v-model="department.order" label="الترتيب" :rules="[ v => !!v || 'Name is required']" required />
 			<v-select outlined dense label="الحالة" :items="[{id:'active',name:'نشط'},{id:'in_active',name:'غير نشط'}]" item-text="name" item-value="id" v-model="department.state"></v-select>
 			<v-select outlined dense label="اللون" :items="['primary','secondary','success','info','error']" v-model="department.color"></v-select>
-			<v-select outlined dense label="النوع" :items="['image','video']" v-model="department.file_type"></v-select>
 		</d-dialog>
-	</div>
+	</v-card>
 </template>
 
 <script>
