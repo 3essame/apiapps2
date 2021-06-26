@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { make, Payload } from "vuex-pathify";
 const state = {
-    department_masters: [],
+    course_masters: [],
 
     roles: [],
     users: [],
@@ -28,9 +28,9 @@ const getters = {
 };
 
 const actions = {
-    async setDepartmentMasters({ commit }) {
-        const response = await axios.get("department-master");
-        commit("SET_DEPARTMENT_MASTERS", response.data);
+    async setCourseMasters({ commit }) {
+        const response = await axios.get("course-master");
+        commit("SET_COURSE_MASTERS", response.data);
     },
 
     async setSliderImages({ commit }) {

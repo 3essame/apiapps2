@@ -17,34 +17,33 @@ class CourseMasterController extends Controller
     {
         //return request();
         request()->validate([
-            'name'=>'required',
-            'place'=>'required',
-            'status'=>'required',
-            'type'=>'required|numeric'
+            'name' => 'required',
+            'place' => 'required',
+            'status' => 'required',
+            'type' => 'required|numeric'
         ]);
 
-        $coursemaster= CourseMaster::create(request()->only('name','place','notes','status','importid' ,'type'));
+        $coursemaster = CourseMaster::create(request()->only('name', 'place', 'notes', 'status', 'importid', 'type'));
 
         $coursemaster->departments()->syncWithoutDetaching(request()->only('ids'));
         return $coursemaster->load('departments');
-
     }
 
 
     public function show(CourseMaster $coursemaster)
-{
-    return $coursemaster;
-}
-// update
+    {
+        return $coursemaster;
+    }
+    // update
     public function update(CourseMaster $coursemaster)
     {
         $coursemaster->update([
-            'name'     =>request()->name,
-            'place'    =>request()->place,
-            'notes'    =>request()->notes,
-            'status'   =>request()->status,
-            'importid' =>request()->importid,
-            'type'     =>request()->type
+            'name'     => request()->name,
+            'place'    => request()->place,
+            'notes'    => request()->notes,
+            'status'   => request()->status,
+            'importid' => request()->importid,
+            'type'     => request()->type
 
         ]);
         $coursemaster->departments()->syncWithoutDetaching(request()->only('ids'));
@@ -57,6 +56,4 @@ class CourseMasterController extends Controller
         $post = CourseMaster::find($id);
         $post->delete();
     }
-
-
 }
