@@ -4,9 +4,7 @@
 			<template v-slot:img="{ props }">
 				<v-img v-bind="props" gradient="to top right, rgba(100,115,201,.1), rgba(25,32,72,.3)"></v-img>
 			</template>
-
 			<v-app-bar-nav-icon @click="drawer = !drawer" class="mt-2"></v-app-bar-nav-icon>
-
 			<div style="cursor: pointer" class="mt-3 mb-3" @click="$router.push('/')">
 				<span>{{_settings('general').websit_title}}</span><br>
 				<small>{{_settings('general').websit_subtitle}}</small>
