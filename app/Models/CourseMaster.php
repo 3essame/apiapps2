@@ -17,7 +17,6 @@ class CourseMaster extends Model
 
     public function departments() // relation with Department many to many
     {
-        return $this->belongsToMany('App\Models\Department','coursemaster_departments')->withPivot(['state']);
+        return $this->belongsToMany('App\Models\Department', 'course_master_departments')->withPivot(['state']);
     }
-
 }

@@ -6,8 +6,7 @@
 					<input @input="setSelectAll()" v-model="select_all" type="checkbox">
 
 				</td>
-				<th v-for="(header,i) in  _headers" :key="i">{{$t(header.text)}}</th>
-				<th v-if="options && options.length>0">{{$t('options')}}</th>
+				<th v-for="(header,i) in  _headers" :key="i">{{header.text}}</th>
 			</thead>
 			<tbody>
 				<tr v-if="inputs">
@@ -54,94 +53,94 @@
 </template>
 
 <script>
-export default {
-	props: {
-		value: { type: Array },
-		items: { type: Array, default: function () { return [] } },
-		headers: { type: Array },
-		search: { type: String },
-		options: { type: Array },
-		totals: { type: Array },
-		inputs: { type: Boolean },
-		selectable: { type: Boolean, default: false },
-	},
-	data () {
-		return {
-			select_all: "",
-		};
-	},
-
-	computed: {
-		_headers () {
-			return this.headers.map((h) => {
-				let items = h.split("|");
-				let text = items[0];
-				let value = items.length > 1 ? items[1] : items[0];
-				return {
-					text: text,
-					align:  "right",
-					value: value,
-				};
-			});
+	export default {
+		props: {
+			value: { type: Array },
+			items: { type: Array, default: function () { return [] } },
+			headers: { type: Array },
+			search: { type: String },
+			options: { type: Array },
+			totals: { type: Array },
+			inputs: { type: Boolean },
+			selectable: { type: Boolean, default: false },
 		},
-	},
-
-	methods: {
-		setTest (item) {
-			this.$emit("input", this.items.filter((i) => i.___selected == true));
-
+		data() {
+			return {
+				select_all: "",
+			};
 		},
 
-		setSelectAll () {
-			this.items.forEach((i) => (i.___selected = !this.select_all));
-			this.$emit("input", this.items.filter((i) => i.___selected == true));
-
+		computed: {
+			_headers() {
+				return this.headers.map((h) => {
+					let items = h.split("|");
+					let text = items[0];
+					let value = items.length > 1 ? items[1] : items[0];
+					return {
+						text: text,
+						align: "right",
+						value: value,
+					};
+				});
+			},
 		},
 
-		getValue (o, s) {
-			s = s.replace(/\[(\w+)\]/g, ".$1"); // convert indexes to properties
-			s = s.replace(/^\./, ""); // strip a leading dot
-			var a = s.split(".");
-			for (var i = 0, n = a.length; i < n; ++i) {
-				var k = a[i];
-				if (k in o) {
-					o = o[k];
-				} else {
-					return;
+		methods: {
+			setTest(item) {
+				this.$emit("input", this.items.filter((i) => i.___selected == true));
+
+			},
+
+			setSelectAll() {
+				this.items.forEach((i) => (i.___selected = !this.select_all));
+				this.$emit("input", this.items.filter((i) => i.___selected == true));
+
+			},
+
+			getValue(o, s) {
+				s = s.replace(/\[(\w+)\]/g, ".$1"); // convert indexes to properties
+				s = s.replace(/^\./, ""); // strip a leading dot
+				var a = s.split(".");
+				for (var i = 0, n = a.length; i < n; ++i) {
+					var k = a[i];
+					if (k in o) {
+						o = o[k];
+					} else {
+						return;
+					}
 				}
-			}
-			return o;
+				return o;
+			},
 		},
-	},
-};
+	};
 </script>
 
 <style lang="scss" scoped>
-.lighten {
-	background-color: rgb(191, 255, 185);
-}
+	.lighten {
+		background-color: rgb(191, 255, 185);
+	}
 
-.l-table {
-	// width: 100%;
-	overflow-x: auto;
-	background-color: white;
-	padding: 5px;
-	table {
-		border-collapse: collapse;
-		width: 100%;
+	.l-table {
+		// width: 100%;
+		overflow-x: auto;
+		background-color: white;
+		padding: 5px;
+		table {
+			border-collapse: collapse;
+			width: 100%;
 
-		td {
-			padding: 5px;
-			border-bottom: solid 1px rgb(238, 238, 238);
-			text-align: center;
-		}
+			td {
+				padding: 5px;
+				border-bottom: solid 1px rgb(238, 238, 238);
+				text-align: center;
+			}
 
-		th {
-			min-width: 100px;
-			padding: 5px;
-			border-bottom: solid 1px rgb(238, 238, 238);
-			text-align: center;
+			th {
+				min-width: 100px;
+				padding: 5px;
+				border-bottom: solid 1px rgb(238, 238, 238);
+				text-align: center;
+			}
 		}
 	}
-}
 </style>

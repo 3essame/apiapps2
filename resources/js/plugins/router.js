@@ -45,6 +45,20 @@ const routes = [
         meta: { auth: false, redirect: { name: "/" } }
     },
     {
+        path: "/course_masters",
+        name: "البرامج التدريبية",
+        component: loadView("pages/course_masters/CourseMasters"),
+        meta: { auth: true }
+    },
+
+    {
+        path: "/course_masters/:id",
+        name: "البرنامج التدريبية",
+        component: loadView("pages/course_masters/CourseMaster"),
+        meta: { auth: true }
+    },
+
+    {
         path: "/courses",
         name: "الدورات التدريبية",
         component: loadView("pages/courses/Courses"),

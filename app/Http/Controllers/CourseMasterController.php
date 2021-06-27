@@ -9,7 +9,7 @@ class CourseMasterController extends Controller
 {
     public function index()
     {
-        return CourseMaster::all();
+        return CourseMaster::withCount(['departments', 'courses'])->get();
     }
 
 
@@ -19,41 +19,42 @@ class CourseMasterController extends Controller
         request()->validate([
             'name' => 'required',
             'place' => 'required',
-            'status' => 'required',
+            // 'state' => 'required',
             'type' => 'required|numeric'
         ]);
 
-        $coursemaster = CourseMaster::create(request()->only('name', 'place', 'notes', 'status', 'importid', 'type'));
-
-        $coursemaster->departments()->syncWithoutDetaching(request()->only('ids'));
-        return $coursemaster->load('departments');
+        $coursemaster = CourseMaster::create(request()->only('name', 'place', 'description', 'state',  'type'));
+        $coursemaster->departments()->attach(request()->department_ids);
+        $coursemaster->courses()->createMany(request()->courses);
+        return $coursemaster->loadCount('departments', 'courses');
     }
 
 
-    public function show(CourseMaster $coursemaster)
+    public function show(CourseMaster $course_master)
     {
-        return $coursemaster;
+        return $course_master->load('courses', 'departments');
     }
     // update
-    public function update(CourseMaster $coursemaster)
+    public function update(CourseMaster $course_master)
     {
-        $coursemaster->update([
+        $course_master->update([
             'name'     => request()->name,
             'place'    => request()->place,
-            'notes'    => request()->notes,
-            'status'   => request()->status,
-            'importid' => request()->importid,
+            'description'    => request()->notes,
+            //'state'   => request()->state,
             'type'     => request()->type
 
         ]);
-        $coursemaster->departments()->syncWithoutDetaching(request()->only('ids'));
-        return $coursemaster;
+        $course_master->departments()->sync(request()->department_ids);
+        $course_master->courses()->delete();
+        $course_master->courses()->createMany(request()->courses);
+
+        return $course_master->loadCount('departments', 'courses');
     }
 
-    public function destroy($id)
+    public function destroy(CourseMaster $course_master)
     {
         //return request();
-        $post = CourseMaster::find($id);
-        $post->delete();
+        $course_master->delete();
     }
 }
