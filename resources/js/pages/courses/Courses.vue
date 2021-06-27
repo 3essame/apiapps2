@@ -35,6 +35,7 @@
 		}, computed: {
 			...get(['departments', 'cource_masters']),
 		},
+
 		methods: {
 			fechCourseMasters() {
 				this.$store.set('courseMasters')
